@@ -1,0 +1,61 @@
+﻿@model PagedList.IPagedList<Monoapp.Models.VehicleModel>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "VehicleModel";
+}
+
+<h2>Vehicle Model</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@using (Html.BeginForm("Index", "VehicleModels", FormMethod.Get))
+{
+    <p>
+        Search by Make: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("ModelName", "Index", new { Sortorder = ViewBag.NamesortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("MakeName", "Index", new { Sortorder = ViewBag.ConectionsortParam, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        
+        <th>
+            @Html.ActionLink("Abrv", "Index", new { Sortorder = ViewBag.abrv, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VehicleMake.Name)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.abrv)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ModelId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ModelId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ModelId })
+        </td>
+    </tr>
+}
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

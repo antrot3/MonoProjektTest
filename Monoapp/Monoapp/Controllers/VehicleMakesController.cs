@@ -1,27 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Monoapp.DAL;
-using Monoapp.Models;
+using Monoapp.Data.Repositories.VehicleMakes;
+using Monoapp.Data.ViewModels;
 using PagedList;
 
 namespace Monoapp.Controllers
 {
     public class VehicleMakesController : Controller
     {
-        private AutiContext db = new AutiContext();
+        private readonly IVehicleMakesQueries _vehicleMakesQueries;
+        private readonly IVehicleMakesCommands _vehicleMakesCommands;
+        public VehicleMakesController()
+        {
+            _vehicleMakesQueries = new VehicleMakesQueries();
+            _vehicleMakesCommands = new VehicleMakesCommands();
+        }
 
         // GET: VehicleMakes
-        public ActionResult Index(string Sortorder2, string currentFilter, string searchString, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            ViewBag.CurrentSort = Sortorder2;
-            ViewBag.NamesortParm2 = String.IsNullOrEmpty(Sortorder2) ? "name_desc" : "";
-            ViewBag.abrv2 = String.IsNullOrEmpty(Sortorder2) ? "abrv_desc" : "";
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NamesortParm2 = string.IsNullOrEmpty(sortOrder) ? "Name_Desc" : "";
+            ViewBag.Abrv2 = string.IsNullOrEmpty(sortOrder) ? "Abrv_Desc" : "";
             if (searchString != null)
             {
                 page = 1;
@@ -31,30 +32,29 @@ namespace Monoapp.Controllers
                 searchString = currentFilter;
             }
 
-            ViewBag.CurrentFilter = searchString;
-            var VehicleMake = from b in db.VehicleMake select b;
+            ViewBag.currentFilter = searchString;
+            var VehicleMakes = _vehicleMakesQueries.GetAllVehicleMakes();
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                VehicleMake = VehicleMake.Where(v => v.Name.Contains(searchString)
-                                       || v.Name.Contains(searchString));
+                VehicleMakes = VehicleMakes.Where(v => v.Name.Contains(searchString));
             }
-            switch (Sortorder2)
+            switch (sortOrder)
             {
-                case "name_desc":
-                    VehicleMake = VehicleMake.OrderByDescending(b => b.Name);
+                case "Name_Desc":
+                    VehicleMakes = VehicleMakes.OrderByDescending(b => b.Name);
                     break;
                
-                case "abrv_desc":
-                    VehicleMake = VehicleMake.OrderByDescending(b => b.Abrv);
+                case "Abrv_Desc":
+                    VehicleMakes = VehicleMakes.OrderByDescending(b => b.Abrv);
                     break;
                 default:
-                    VehicleMake = VehicleMake.OrderBy(b => b.Name);
+                    VehicleMakes = VehicleMakes.OrderBy(b => b.Name);
                     break;
             }
-            int pageSize = 3;
-            int pageNumber = (page ?? 1);
-            return View(VehicleMake.ToPagedList(pageNumber, pageSize));
+            const int PageSize = 3;
+            int PageNumber = (page ?? 1);
+            return View(VehicleMakes.ToPagedList(PageNumber, PageSize));
         }
 
         // GET: VehicleMakes/Details/5
@@ -64,7 +64,7 @@ namespace Monoapp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = db.VehicleMake.Find(id);
+            var vehicleMake = _vehicleMakesQueries.GetVehicleMakeById((int)id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -83,12 +83,11 @@ namespace Monoapp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MakeId,Name,Abrv")] VehicleMake vehicleMake)
+        public ActionResult Create([Bind(Include = "MakeId,Name,Abrv")] VehicleMakeViewModel vehicleMake)
         {
             if (ModelState.IsValid)
             {
-                db.VehicleMake.Add(vehicleMake);
-                db.SaveChanges();
+                _vehicleMakesCommands.AddNewVehicleMake(vehicleMake);
                 return RedirectToAction("Index");
             }
 
@@ -102,7 +101,7 @@ namespace Monoapp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = db.VehicleMake.Find(id);
+            var vehicleMake = _vehicleMakesQueries.GetVehicleMakeById((int)id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -115,12 +114,11 @@ namespace Monoapp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MakeId,Name,Abrv")] VehicleMake vehicleMake)
+        public ActionResult Edit([Bind(Include = "MakeId,Name,Abrv")] VehicleMakeViewModel vehicleMake)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(vehicleMake).State = EntityState.Modified;
-                db.SaveChanges();
+                _vehicleMakesCommands.EditVehicleMake(vehicleMake);
                 return RedirectToAction("Index");
             }
             return View(vehicleMake);
@@ -133,7 +131,7 @@ namespace Monoapp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = db.VehicleMake.Find(id);
+            var vehicleMake = _vehicleMakesQueries.GetVehicleMakeById((int)id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -146,19 +144,8 @@ namespace Monoapp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            VehicleMake vehicleMake = db.VehicleMake.Find(id);
-            db.VehicleMake.Remove(vehicleMake);
-            db.SaveChanges();
+            _vehicleMakesCommands.DeleteVehicleMake(id);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

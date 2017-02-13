@@ -1,4 +1,4 @@
-﻿@model Monoapp.Models.VehicleModel
+﻿@model Monoapp.Data.ViewModels.VehicleModelViewModel
 
 @{
     ViewBag.Title = "Delete";
@@ -12,7 +12,7 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.VehicleMake.Name)
+            Make Name
         </dt>
 
         <dd>
@@ -20,19 +20,19 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.name)
+            Model Name
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.name)
+            @Html.DisplayFor(model => model.Name)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.abrv)
+           Model Abrv
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.abrv)
+            @Html.DisplayFor(model => model.Abrv)
         </dd>
 
     </dl>

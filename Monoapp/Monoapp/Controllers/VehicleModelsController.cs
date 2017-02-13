@@ -1,28 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Monoapp.DAL;
-using Monoapp.Models;
+using Monoapp.Data.Repositories.VehicleMakes;
+using Monoapp.Data.Repositories.VehicleModel;
+using Monoapp.Data.ViewModels;
 using PagedList;
 
 namespace Monoapp.Controllers
 {
     public class VehicleModelsController : Controller
     {
-        private AutiContext db = new AutiContext();
+        private readonly IVehicleModelsQueries _vehicleModelsQueries;
+        private readonly IVehicleModelsCommands _vehicleModelsCommands;
+        private readonly IVehicleMakesQueries _vehicleMakesQueries;
+
+        public VehicleModelsController()
+        {
+            _vehicleModelsCommands = new VehicleModelsCommands();
+            _vehicleModelsQueries = new VehicleModelsQueries();
+            _vehicleMakesQueries = new VehicleMakesQueries();
+        }
 
         // GET: VehicleModels
-        public ActionResult Index(string Sortorder, string currentFilter, string searchString, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            ViewBag.CurrentSort = Sortorder;
-            ViewBag.NamesortParm = String.IsNullOrEmpty(Sortorder) ? "name_desc" : "";
-            ViewBag.ConectionsortParam=String.IsNullOrEmpty(Sortorder)? "connection_desc" :"";
-            ViewBag.abrv = String.IsNullOrEmpty(Sortorder) ? "abrv_desc" : "";
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NamesortParm = string.IsNullOrEmpty(sortOrder) ? "Name_Desc" : "";
+            ViewBag.ConectionsortParam= string.IsNullOrEmpty(sortOrder)? "Connection_Desc" :"";
+            ViewBag.Abrv = string.IsNullOrEmpty(sortOrder) ? "Abrv_Desc" : "";
             if (searchString != null)
             {
                 page = 1;
@@ -32,33 +37,32 @@ namespace Monoapp.Controllers
                 searchString = currentFilter;
             }
 
-            ViewBag.CurrentFilter = searchString;
+            ViewBag.currentFilter = searchString;
 
-            var vehicleModel = from v in db.VehicleModel select v;
-            if (!String.IsNullOrEmpty(searchString))
+            var VehicleModels = _vehicleModelsQueries.GetAllVehicleModels();
+            if (!string.IsNullOrEmpty(searchString))
             {
-                vehicleModel = vehicleModel.Where(v => v.VehicleMake.Name.Contains(searchString)
-                                       || v.VehicleMake.Name.Contains(searchString));
+                VehicleModels = VehicleModels.Where(v => v.VehicleMake.Name.Contains(searchString));
             }
-            switch (Sortorder)
+            switch (sortOrder)
             {
-                case "name_desc":
-                    vehicleModel = vehicleModel.OrderByDescending(v => v.name);
+                case "Name_Desc":
+                    VehicleModels = VehicleModels.OrderByDescending(v => v.Name);
                     break;
-                case "connection_desc":
-                    vehicleModel = vehicleModel.OrderByDescending(v => v.VehicleMake.Name);
+                case "Connection_Desc":
+                    VehicleModels = VehicleModels.OrderByDescending(v => v.VehicleMake.Name);
                     break;
-                case "abrv_desc":
-                    vehicleModel = vehicleModel.OrderByDescending(v => v.abrv);
+                case "Abrv_Desc":
+                    VehicleModels = VehicleModels.OrderByDescending(v => v.Abrv);
                     break;
                 default:
-                    vehicleModel = vehicleModel.OrderBy(v => v.name);
+                    VehicleModels = VehicleModels.OrderBy(v => v.Name);
                     break;
             }
 
-            int pageSize = 3;
-            int pageNumber = (page ?? 1);
-            return View(vehicleModel.ToPagedList(pageNumber, pageSize));
+            const int PageSize = 3;
+            int PageNumber = (page ?? 1);
+            return View(VehicleModels.ToPagedList(PageNumber, PageSize));
         }
 
         // GET: VehicleModels/Details/5
@@ -68,7 +72,7 @@ namespace Monoapp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
+            var vehicleModel = _vehicleModelsQueries.GetVehicleModelById((int) id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -79,7 +83,7 @@ namespace Monoapp.Controllers
         // GET: VehicleModels/Create
         public ActionResult Create()
         {
-            ViewBag.MakeId = new SelectList(db.VehicleMake, "MakeId", "Name");
+            ViewBag.MakeId = new SelectList(_vehicleMakesQueries.GetAllVehicleMakes(), "MakeId", "Name");
             return View();
         }
 
@@ -88,16 +92,15 @@ namespace Monoapp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ModelId,MakeId,name,abrv")] VehicleModel vehicleModel)
+        public ActionResult Create([Bind(Include = "ModelId,MakeId,Name,Abrv")] VehicleModelViewModel vehicleModel)
         {
             if (ModelState.IsValid)
             {
-                db.VehicleModel.Add(vehicleModel);
-                db.SaveChanges();
+                _vehicleModelsCommands.AddNewVehicleModel(vehicleModel);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.MakeId = new SelectList(db.VehicleMake, "MakeId", "Name", vehicleModel.MakeId);
+            ViewBag.MakeId = new SelectList(_vehicleMakesQueries.GetAllVehicleMakes(), "MakeId", "Name", vehicleModel.MakeId);
             return View(vehicleModel);
         }
 
@@ -108,12 +111,12 @@ namespace Monoapp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
+            var vehicleModel = _vehicleModelsQueries.GetVehicleModelById((int)id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.MakeId = new SelectList(db.VehicleMake, "MakeId", "Name", vehicleModel.MakeId);
+            ViewBag.MakeId = new SelectList(_vehicleMakesQueries.GetAllVehicleMakes(), "MakeId", "Name", vehicleModel.MakeId);
             return View(vehicleModel);
         }
 
@@ -122,15 +125,14 @@ namespace Monoapp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ModelId,MakeId,name,abrv")] VehicleModel vehicleModel)
+        public ActionResult Edit([Bind(Include = "ModelId,MakeId,Name,Abrv")] VehicleModelViewModel vehicleModel)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(vehicleModel).State = EntityState.Modified;
-                db.SaveChanges();
+                _vehicleModelsCommands.EditVehicleModel(vehicleModel);
                 return RedirectToAction("Index");
             }
-            ViewBag.MakeId = new SelectList(db.VehicleMake, "MakeId", "Name", vehicleModel.MakeId);
+            ViewBag.MakeId = new SelectList(_vehicleMakesQueries.GetAllVehicleMakes(), "MakeId", "Name", vehicleModel.MakeId);
             return View(vehicleModel);
         }
 
@@ -141,7 +143,7 @@ namespace Monoapp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
+            var vehicleModel = _vehicleModelsQueries.GetVehicleModelById((int)id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -154,19 +156,8 @@ namespace Monoapp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
-            db.VehicleModel.Remove(vehicleModel);
-            db.SaveChanges();
+            _vehicleModelsCommands.DeleteVehicleModel(id);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

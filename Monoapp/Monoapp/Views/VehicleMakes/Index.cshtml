@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<Monoapp.Models.VehicleMake>
+﻿@model PagedList.IPagedList<Monoapp.Data.ViewModels.VehicleMakeViewModel>
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
@@ -21,10 +21,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("MakeName", "Index", new { Sortorder2 = ViewBag.NamesortParm2, currentFilter = ViewBag.CurrentFilter })
+            @Html.ActionLink("MakeName", "Index", new { sortOrder = ViewBag.NamesortParm2, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Abrv", "Index", new { Sortorder2 = ViewBag.Abrv2, currentFilter = ViewBag.CurrentFilter })
+            @Html.ActionLink("Abrv", "Index", new { sortOrder = ViewBag.Abrv2, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th></th>
     </tr>

@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<Monoapp.Models.VehicleModel>
+﻿@model PagedList.IPagedList<Monoapp.Data.ViewModels.VehicleModelViewModel>
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
@@ -21,14 +21,14 @@
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("ModelName", "Index", new { Sortorder = ViewBag.NamesortParm, currentFilter = ViewBag.CurrentFilter })
+            @Html.ActionLink("Model Name", "Index", new { SortOrder = ViewBag.NamesortParm, CurrentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("MakeName", "Index", new { Sortorder = ViewBag.ConectionsortParam, currentFilter = ViewBag.CurrentFilter })
+            @Html.ActionLink("Make Name", "Index", new { SortOrder = ViewBag.ConectionsortParam, CurrentFilter = ViewBag.CurrentFilter })
         </th>
         
         <th>
-            @Html.ActionLink("Abrv", "Index", new { Sortorder = ViewBag.abrv, currentFilter = ViewBag.CurrentFilter })
+            @Html.ActionLink("Model Abrv", "Index", new { SortOrder = ViewBag.Abrv, CurrentFilter = ViewBag.CurrentFilter })
         </th>
         <th></th>
     </tr>
@@ -36,14 +36,14 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.name)
+            @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.VehicleMake.Name)
         </td>
         
         <td>
-            @Html.DisplayFor(modelItem => item.abrv)
+            @Html.DisplayFor(modelItem => item.Abrv)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ModelId }) |
@@ -58,4 +58,4 @@
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
 @Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    new { page, SortOrder = ViewBag.CurrentSort, CurrentFilter = ViewBag.CurrentFilter }))

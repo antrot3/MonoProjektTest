@@ -149,6 +149,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\VehicleMakesRepository.cs" />
+    <Compile Include="Repositories\VehicleModelRepository.cs" />
+    <Compile Include="ViewModels\VehicleMakeViewModel.cs" />
+    <Compile Include="ViewModels\VehicleModelViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Auto.jpg" />

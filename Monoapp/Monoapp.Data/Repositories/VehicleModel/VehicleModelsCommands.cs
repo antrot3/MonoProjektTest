@@ -1,7 +1,8 @@
 ﻿using System.Data.Entity;
 using AutoMapper;
 using Monoapp.Data.Database.Models;
-using Monoapp.Data.ViewModels;
+using Monoapp.Data.Database.Models.Entities;
+using Monoapp.ViewModels;
 
 namespace Monoapp.Data.Repositories.VehicleModel
 {

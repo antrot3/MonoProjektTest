@@ -11,10 +11,10 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-@using (Html.BeginForm("Index", "VehicleMakes", FormMethod.Get))
+@using (Html.BeginForm())
 {
     <p>
-        Search by MakeName: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        Find by name: @Html.TextBox("searchByName")
         <input type="submit" value="Search" />
     </p>
 }
@@ -29,21 +29,22 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Abrv)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.MakeId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.MakeId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.MakeId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Abrv)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.MakeId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.MakeId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.MakeId })
+            </td>
+        </tr>
+    }
 
 </table>
 <br />

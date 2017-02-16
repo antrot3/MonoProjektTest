@@ -2,7 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using Monoapp.Data.Database.Models;
-using Monoapp.Data.ViewModels;
+using Monoapp.ViewModels;
 
 namespace Monoapp.Data.Repositories.VehicleModel
 {

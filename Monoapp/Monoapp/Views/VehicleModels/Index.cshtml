@@ -14,7 +14,7 @@
 @using (Html.BeginForm("Index", "VehicleModels", FormMethod.Get))
 {
     <p>
-        Search by Make: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        Search by Make: @Html.TextBox("searchByName", ViewBag.CurrentFilter as string)
         <input type="submit" value="Search" />
     </p>
 }
@@ -26,32 +26,33 @@
         <th>
             @Html.ActionLink("Make Name", "Index", new { SortOrder = ViewBag.ConectionsortParam, CurrentFilter = ViewBag.CurrentFilter })
         </th>
-        
+
         <th>
             @Html.ActionLink("Model Abrv", "Index", new { SortOrder = ViewBag.Abrv, CurrentFilter = ViewBag.CurrentFilter })
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.VehicleMake.Name)
-        </td>
-        
-        <td>
-            @Html.DisplayFor(modelItem => item.Abrv)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ModelId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ModelId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ModelId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleMake.Name)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Abrv)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ModelId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ModelId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ModelId })
+            </td>
+        </tr>
+    }
 
 </table>
 <br />

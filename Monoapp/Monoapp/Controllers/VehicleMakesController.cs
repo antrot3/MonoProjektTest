@@ -19,7 +19,6 @@ namespace Monoapp.Controllers
         // GET: VehicleMakes
         public ActionResult Index(string sortOrder, string currentFilter, string searchByName, int? page)
         {
-            
             ViewBag.CurrentSort = sortOrder;
             ViewBag.search = searchByName;
             ViewBag.NamesortParm2 = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";

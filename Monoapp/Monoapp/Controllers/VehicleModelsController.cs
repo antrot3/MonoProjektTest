@@ -1,8 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using AutoMapper;
+using Monoapp.Data.Database.Models.Entities;
 using Monoapp.Data.Repositories;
 using Monoapp.Data.ViewModels;
+using Monoapp.ViewModels;
 using PagedList;
 
 namespace Monoapp.Controllers
@@ -26,12 +31,21 @@ namespace Monoapp.Controllers
             ViewBag.NamesortParm = string.IsNullOrEmpty(sortOrder) ? "Name_Desc" : "";
             ViewBag.ConectionsortParam = string.IsNullOrEmpty(sortOrder) ? "Connection_Desc" : "";
             ViewBag.Abrv = string.IsNullOrEmpty(sortOrder) ? "Abrv_Desc" : "";
-            int pageSize = 3;
-            int pageNumber = (page ?? 1);
-            var vehicleModels = _vehicleModelRepository.GetVehicleByModelSearch(sortOrder, currentFilter, searchByName, page);
-
-
-            return View(vehicleModels.ToPagedList(pageNumber, pageSize));
+            ViewBag.search = searchByName;
+            var pageSize = 3;
+            var pageNumber = (page ?? 1);
+            ViewBag.page = pageNumber;
+            var totalPageNumbers = _vehicleModelRepository.GetCountOfVehicleModels()/pageSize+1;
+            var vehicleModels = Mapper.Map<ICollection<VehicleModelViewModel>>(
+                                    _vehicleModelRepository.GetVehicleByModelSearch(sortOrder, currentFilter,searchByName, pageNumber, pageSize).ToList()
+                                );
+            if (searchByName != null)
+            {    int g = 0;
+                foreach (var i in vehicleModels) { g++; }
+                ViewBag.totalPageNumbers = g / pageSize + 1;
+            }
+            else{ ViewBag.totalPageNumbers = totalPageNumbers; }
+            return View(vehicleModels);
 
         }
         // GET: VehicleModels/Details/5
@@ -41,7 +55,9 @@ namespace Monoapp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var vehicleModel = _vehicleModelRepository.GetVehicleModelById((int) id);
+            var vehicleModel = Mapper.Map<VehicleModelViewModel>(
+                _vehicleModelRepository.GetVehicleModelById((int) id)
+                );
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -52,7 +68,7 @@ namespace Monoapp.Controllers
         // GET: VehicleModels/Create
         public ActionResult Create()
         {
-            ViewBag.MakeId = new SelectList(_vehicleMakesRepository.GetAllVehicleMakes(), "MakeId", "Name");
+            ViewBag.MakeId = new SelectList(Mapper.Map<ICollection<VehicleMakeViewModel>>(_vehicleMakesRepository.GetAllVehicleMakes()), "MakeId", "Name");
             return View();
         }
 
@@ -65,7 +81,7 @@ namespace Monoapp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _vehicleModelRepository.AddNewVehicleModel(vehicleModel);
+                _vehicleModelRepository.AddNewVehicleModel(Mapper.Map<VehicleModel>(vehicleModel));
                 return RedirectToAction("Index");
             }
 
@@ -80,7 +96,9 @@ namespace Monoapp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var vehicleModel = _vehicleModelRepository.GetVehicleModelById((int)id);
+            var vehicleModel = Mapper.Map<VehicleModelViewModel>(
+                _vehicleModelRepository.GetVehicleModelById((int)id)
+                );
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -98,7 +116,7 @@ namespace Monoapp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _vehicleModelRepository.EditVehicleModel(vehicleModel);
+                _vehicleModelRepository.EditVehicleModel(Mapper.Map<VehicleModel>(vehicleModel));
                 return RedirectToAction("Index");
             }
             ViewBag.MakeId = new SelectList(_vehicleMakesRepository.GetAllVehicleMakes(), "MakeId", "Name", vehicleModel.MakeId);
@@ -112,7 +130,9 @@ namespace Monoapp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var vehicleModel = _vehicleModelRepository.GetVehicleModelById((int)id);
+            var vehicleModel = Mapper.Map<VehicleModelViewModel>(
+                _vehicleModelRepository.GetVehicleModelById((int)id)
+                );
             if (vehicleModel == null)
             {
                 return HttpNotFound();

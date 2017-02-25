@@ -1,4 +1,4 @@
-﻿namespace Monoapp.Data.ViewModels
+﻿namespace Monoapp.ViewModels
 {
     public class VehicleModelViewModel
     {

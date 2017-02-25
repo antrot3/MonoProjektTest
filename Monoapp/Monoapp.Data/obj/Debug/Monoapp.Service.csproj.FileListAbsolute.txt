@@ -9,3 +9,42 @@ C:\Users\Ante\Desktop\mono\Verzija17\vehicle_inventory\Monoapp\Monoapp.Data\bin\
 C:\Users\Ante\Desktop\mono\Verzija17\vehicle_inventory\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\Ante\Desktop\mono\Verzija17\vehicle_inventory\Monoapp\Monoapp.Data\obj\Debug\Monoapp.Data.dll
 C:\Users\Ante\Desktop\mono\Verzija17\vehicle_inventory\Monoapp\Monoapp.Data\obj\Debug\Monoapp.Data.pdb
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\bin\Debug\Monoapp.Data.dll.config
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\bin\Debug\Monoapp.Data.dll
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\bin\Debug\Monoapp.Data.pdb
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\bin\Debug\AutoMapper.dll
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.dll
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\bin\Debug\AutoMapper.xml
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.xml
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\obj\Debug\Monoapp.Service.csprojResolveAssemblyReference.cache
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\obj\Debug\Monoapp.Data.dll
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\obj\Debug\Monoapp.Data.pdb
+C:\Users\Ante\Desktop\MonoProjektTest\Monoapp\Monoapp.Data\bin\Debug\X.PagedList.dll
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\bin\Debug\Monoapp.Data.dll.config
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\bin\Debug\Monoapp.Data.dll
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\bin\Debug\Monoapp.Data.pdb
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\bin\Debug\AutoMapper.dll
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.dll
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\bin\Debug\X.PagedList.dll
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\bin\Debug\AutoMapper.xml
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.xml
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\obj\Debug\Monoapp.Service.csprojResolveAssemblyReference.cache
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\obj\Debug\Monoapp.Data.dll
+C:\Users\Mario\Desktop\RotaKod\Njegov github\moj\Monoapp\Monoapp.Data\obj\Debug\Monoapp.Data.pdb
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\bin\Debug\Monoapp.Data.dll.config
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\bin\Debug\Monoapp.Data.dll
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\bin\Debug\Monoapp.Data.pdb
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\bin\Debug\AutoMapper.dll
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.dll
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\bin\Debug\X.PagedList.dll
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\bin\Debug\AutoMapper.xml
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.xml
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\obj\Debug\Monoapp.Service.csprojResolveAssemblyReference.cache
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\obj\Debug\Monoapp.Data.dll
+C:\Users\Ante\Desktop\moj\Monoapp\Monoapp.Data\obj\Debug\Monoapp.Data.pdb

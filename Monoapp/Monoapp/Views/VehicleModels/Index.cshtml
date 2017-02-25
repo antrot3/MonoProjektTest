@@ -1,7 +1,4 @@
-﻿@model PagedList.IPagedList<Monoapp.Data.ViewModels.VehicleModelViewModel>
-@using PagedList.Mvc;
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-
+﻿@model IEnumerable<Monoapp.ViewModels.VehicleModelViewModel>
 @{
     ViewBag.Title = "VehicleModel";
 }
@@ -16,6 +13,7 @@
     <p>
         Search by Make: @Html.TextBox("searchByName", ViewBag.CurrentFilter as string)
         <input type="submit" value="Search" />
+        <span> @Html.ActionLink("Clear", "Index", new { page = 1 })</span>
     </p>
 }
 <table class="table">
@@ -56,7 +54,191 @@
 
 </table>
 <br />
-Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@if (ViewBag.CurrentSort == "Name_Desc" && ViewBag.search == null)
+{
+    if (ViewBag.page != 1)
+    {
+        <span> @Html.ActionLink("<", "Index", new { page = ViewBag.page - 1, sortOrder = "Name_Desc" })</span>
+    }
+    int i = ViewBag.page;
+    if (i == ViewBag.totalPageNumbers && i != 1)
+    {
+        <span>@Html.ActionLink((i - 1).ToString(), "Index", new { page = i - 1, sortOrder = "Name_Desc" })</span>
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, sortOrder = "Name_Desc" })</span>
+    }
+    else if (ViewBag.totalPageNumbers == 1)
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, sortOrder = "Name_Desc" })</span>
+    }
+    else
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, sortOrder = "Name_Desc" })</span>
+        <span>@Html.ActionLink((i + 1).ToString(), "Index", new { page = i + 1, sortOrder = "Name_Desc" })</span>
+        <span>@Html.ActionLink(">", "Index", new { page = i + 1, sortOrder = "Name_Desc" })</span>
+    }
+}
+else if (ViewBag.CurrentSort == "Abrv_Desc" && ViewBag.search == null)
+{
+    if (ViewBag.page != 1)
+    {
+        <span> @Html.ActionLink("<", "Index", new { page = ViewBag.page - 1, sortOrder = "Abrv_Desc" })</span>
+    }
+    int i = ViewBag.page;
+    if (i == ViewBag.totalPageNumbers && i != 1)
+    {
+        <span>@Html.ActionLink((i - 1).ToString(), "Index", new { page = i - 1, sortOrder = "Abrv_Desc" })</span>
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, sortOrder = "Abrv_Desc" })</span>
+    }
+    else if (ViewBag.totalPageNumbers == 1)
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, sortOrder = "Abrv_Desc" })</span>
+    }
+    else
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, sortOrder = "Abrv_Desc" })</span>
+        <span>@Html.ActionLink((i + 1).ToString(), "Index", new { page = i + 1, sortOrder = "Abrv_Desc" })</span>
+        <span>@Html.ActionLink(">", "Index", new { page = i + 1, sortOrder = "Abrv_Desc" })</span>
+    }
 
-@Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, SortOrder = ViewBag.CurrentSort, CurrentFilter = ViewBag.CurrentFilter }))
+}
+else if (ViewBag.CurrentSort == "Connection_Desc" && ViewBag.search == null)
+{
+    if (ViewBag.page != 1)
+    {
+        <span> @Html.ActionLink("<", "Index", new { page = ViewBag.page - 1, sortOrder = "Connection_Desc" })</span>
+    }
+    int i = ViewBag.page;
+    if (i == ViewBag.totalPageNumbers && i != 1)
+    {
+        <span>@Html.ActionLink((i - 1).ToString(), "Index", new { page = i - 1, sortOrder = "Connection_Desc" })</span>
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, sortOrder = "Connection_Desc" })</span>
+    }
+    else if (ViewBag.totalPageNumbers == 1)
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, sortOrder = "Connection_Desc" })</span>
+    }
+    else
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, sortOrder = "Connection_Desc" })</span>
+        <span>@Html.ActionLink((i + 1).ToString(), "Index", new { page = i + 1, sortOrder = "Connection_Desc" })</span>
+        <span>@Html.ActionLink(">", "Index", new { page = i + 1, sortOrder = "Connection_Desc" })</span>
+    }
+
+}
+else if (ViewBag.CurrentSort == null && ViewBag.search == null)
+{
+    if (ViewBag.page != 1)
+    {
+        <span> @Html.ActionLink("<", "Index", new { page = ViewBag.page - 1 })</span>
+    }
+    int i = ViewBag.page;
+    if (i == ViewBag.totalPageNumbers && i != 1)
+    {
+        <span>@Html.ActionLink((i - 1).ToString(), "Index", new { page = i - 1 })</span>
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i })</span>
+    }
+    else if (ViewBag.totalPageNumbers == 1)
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i })</span>
+    }
+    else
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i })</span>
+        <span>@Html.ActionLink((i + 1).ToString(), "Index", new { page = i + 1 })</span>
+        <span>@Html.ActionLink(">", "Index", new { page = i + 1 })</span>
+    }
+}
+else if (ViewBag.CurrentSort == "Name_Desc" && ViewBag.search != null)
+{
+    if (ViewBag.page != 1)
+    {
+        <span> @Html.ActionLink("<", "Index", new { page = ViewBag.page - 1, searchByName = ViewBag.search, sortOrder = "Name_Desc" })</span>
+    }
+    int i = ViewBag.page;
+    if (i == ViewBag.totalPageNumbers && i != 1)
+    {
+        <span>@Html.ActionLink((i - 1).ToString(), "Index", new { page = i - 1, searchByName = ViewBag.search, sortOrder = "Name_Desc" })</span>
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search, sortOrder = "Name_Desc" })</span>
+
+    }
+    else if (ViewBag.totalPageNumbers == 1)
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search, sortOrder = "Name_Desc" })</span>
+    }
+    else
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search, sortOrder = "Name_Desc" })</span>
+        <span>@Html.ActionLink((i + 1).ToString(), "Index", new { page = i + 1, searchByName = ViewBag.search, sortOrder = "Name_Desc" })</span>
+        <span>@Html.ActionLink(">", "Index", new { page = i + 1, searchByName = ViewBag.search, sortOrder = "Name_Desc" })</span>
+    }
+}
+else if (ViewBag.CurrentSort == "Abrv_Desc" && ViewBag.search != null)
+{
+    if (ViewBag.page != 1)
+    {
+        <span> @Html.ActionLink("<", "Index", new { page = ViewBag.page - 1, searchByName = ViewBag.search, sortOrder = "Abrv_Desc" })</span>
+    }
+    int i = ViewBag.page;
+    if (i == ViewBag.totalPageNumbers && i != 1)
+    {
+        <span>@Html.ActionLink((i - 1).ToString(), "Index", new { page = i - 1, searchByName = ViewBag.search, sortOrder = "Abrv_Desc" })</span>
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search, sortOrder = "Abrv_Desc" })</span>
+    }
+    else if (ViewBag.totalPageNumbers == 1)
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search, sortOrder = "Abrv_Desc" })</span>
+    }
+    else
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search, sortOrder = "Abrv_Desc" })</span>
+        <span>@Html.ActionLink((i + 1).ToString(), "Index", new { page = i + 1, searchByName = ViewBag.search, sortOrder = "Abrv_Desc" })</span>
+        <span>@Html.ActionLink(">", "Index", new { page = i + 1, searchByName = ViewBag.search, sortOrder = "Abrv_Desc" })</span>
+    }
+}
+else if (ViewBag.CurrentSort == "Connection_Desc" && ViewBag.search != null)
+{
+    if (ViewBag.page != 1)
+    {
+        <span> @Html.ActionLink("<", "Index", new { page = ViewBag.page - 1, searchByName = ViewBag.search, sortOrder = "Connection_Desc" })</span>
+    }
+    int i = ViewBag.page;
+    if (i == ViewBag.totalPageNumbers && i != 1)
+    {
+        <span>@Html.ActionLink((i - 1).ToString(), "Index", new { page = i - 1, searchByName = ViewBag.search, sortOrder = "Connection_Desc" })</span>
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search, sortOrder = "Connection_Desc" })</span>
+    }
+    else if (ViewBag.totalPageNumbers == 1)
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search, sortOrder = "Connection_Desc" })</span>
+    }
+    else
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search, sortOrder = "Connection_Desc" })</span>
+        <span>@Html.ActionLink((i + 1).ToString(), "Index", new { page = i + 1, searchByName = ViewBag.search, sortOrder = "Connection_Desc" })</span>
+        <span>@Html.ActionLink(">", "Index", new { page = i + 1, searchByName = ViewBag.search, sortOrder = "Connection_Desc" })</span>
+    }
+}
+else if (ViewBag.CurrentSort == null && ViewBag.search != null)
+{
+    if (ViewBag.page != 1)
+    {
+        <span> @Html.ActionLink("<", "Index", new { page = ViewBag.page - 1, searchByName = ViewBag.search })</span>
+    }
+    int i = ViewBag.page;
+    if (i == ViewBag.totalPageNumbers && i != 1)
+    {
+
+        <span>@Html.ActionLink((i - 1).ToString(), "Index", new { page = i - 1, searchByName = ViewBag.search })</span>
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search })</span>
+    }
+    else if (ViewBag.totalPageNumbers == 1)
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search })</span>
+    }
+    else
+    {
+        <span>@Html.ActionLink((i).ToString(), "Index", new { page = i, searchByName = ViewBag.search })</span>
+        <span>@Html.ActionLink((i + 1).ToString(), "Index", new { page = i + 1, searchByName = ViewBag.search })</span>
+        <span>@Html.ActionLink(">", "Index", new { page = i + 1, searchByName = ViewBag.search })</span>
+    }
+}

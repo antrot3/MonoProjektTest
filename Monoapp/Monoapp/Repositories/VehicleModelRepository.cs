@@ -14,7 +14,7 @@ namespace Monoapp.Data.Repositories
     {
         IEnumerable<VehicleModelViewModel> GetAllVehicleModels();
         VehicleModelViewModel GetVehicleModelById(int id);
-        IEnumerable<VehicleModelViewModel> GetVehicleByModelSearch(string sortOrder, string currentFilter, string searchByName, int? page);
+        IEnumerable<VehicleModelViewModel> GetVehicleByModelSearch(string sortOrder, string currentFilter, string searchByName, int pageNumber, int pageSize);
         void AddNewVehicleModel(VehicleModelViewModel vehicleModelViewModel);
         void EditVehicleModel(VehicleModelViewModel vehicleModelViewModel);
         void DeleteVehicleModel(int id);
@@ -51,56 +51,26 @@ namespace Monoapp.Data.Repositories
             return
                 Mapper.Map<IEnumerable<VehicleModelViewModel>>(_context.VehicleModels.ToList());
         }
-        public IEnumerable<VehicleModelViewModel> GetVehicleByModelSearch(string sortOrder, string currentFilter, string searchByName, int? page)
+        public IEnumerable<VehicleModelViewModel> GetVehicleByModelSearch(string sortOrder, string currentFilter, string searchByName, int pageNumber, int pageSize)
         {
-            var VehicleModel = Mapper.Map<IEnumerable<VehicleModelViewModel>>(_context.VehicleModels.ToList());
+            var VehicleModel = Mapper.Map<IEnumerable<VehicleModelViewModel>>(_context.VehicleModels);
             if (searchByName == null)
             {
 
-                int currentpage = page ?? default(int);
                 switch (sortOrder)
                 {
                     case "Name_Desc":
-                        if (currentpage > 1)
-                        {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.Name).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.Name).Take(6);
-                        }
+                            VehicleModel = VehicleModel.OrderByDescending(b => b.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
 
                     case "Connection_Desc":
-                        if (currentpage > 1)
-                        {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.VehicleMake.Name).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.VehicleMake.Name).Take(6);
-
-                        }
+                            VehicleModel = VehicleModel.OrderByDescending(b => b.VehicleMake.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
                     case "Abrv_Desc":
-                        if (currentpage > 1)
-                        {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.Abrv).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.Abrv).Take(6);
-                        }
+                            VehicleModel = VehicleModel.OrderByDescending(b => b.Abrv).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
                     default:
-
-                        if (currentpage > 1)
-                        {
-                            VehicleModel = VehicleModel.OrderBy(v => v.Name).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleModel = VehicleModel.OrderBy(v => v.Name).Take(6);
-                        }
+                            VehicleModel = VehicleModel.OrderBy(v => v.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
 
                 }
@@ -109,57 +79,27 @@ namespace Monoapp.Data.Repositories
             }
             else {
 
-                VehicleModel = VehicleModel.Where(v => v.VehicleMake.Name.Contains(searchByName));
-                int currentpage = page ?? default(int);
+                VehicleModel = VehicleModel.Where(v => v.VehicleMake.Name.Contains(searchByName)).ToList();
                 switch (sortOrder)
                 {
                     case "Name_Desc":
-                        if (currentpage > 1)
-                        {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.Name).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.Name).Take(6);
-                        }
+                            VehicleModel = VehicleModel.OrderByDescending(b => b.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
 
                     case "Connection_Desc":
-                        if (currentpage > 1)
-                        {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.VehicleMake.Name).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.VehicleMake.Name).Take(6);
-
-                        }
+                            VehicleModel = VehicleModel.OrderByDescending(b => b.VehicleMake.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
                     case "Abrv_Desc":
-                        if (currentpage > 1)
-                        {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.Abrv).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleModel = VehicleModel.OrderByDescending(b => b.Abrv).Take(6);
-                        }
+                            VehicleModel = VehicleModel.OrderByDescending(b => b.Abrv).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
                     default:
-                        
-                         if (currentpage > 1)
-                        {
-                            VehicleModel = VehicleModel.OrderBy(v => v.Name).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleModel = VehicleModel.OrderBy(v => v.Name).Take(6);
-                        }
+                        VehicleModel = VehicleModel.OrderBy(v => v.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
 
                 }
                 return VehicleModel;
             }
-            }
+        }
 
         public VehicleModelViewModel GetVehicleModelById(int id)
         {

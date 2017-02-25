@@ -12,7 +12,7 @@ namespace Monoapp.Data.Repositories
     public interface IVehicleMakesRepository
     {
         IEnumerable<VehicleMakeViewModel> GetAllVehicleMakes();
-        IEnumerable<VehicleMakeViewModel> GetVehicleByMakeSearch(string sortOrder, string currentFilter, string searchByName, int? page);
+        IEnumerable<VehicleMakeViewModel> GetVehicleByMakeSearch(string sortOrder, string currentFilter, string searchByName, int pageNumber, int pageSize);
         VehicleMakeViewModel GetVehicleMakeById(int id);
         void AddNewVehicleMake(VehicleMakeViewModel vehicleMakeViewModel);
         void EditVehicleMake(VehicleMakeViewModel vehicleMakeViewModel);
@@ -51,84 +51,43 @@ namespace Monoapp.Data.Repositories
             return
                 Mapper.Map<IEnumerable<VehicleMakeViewModel>>(_context.VehicleMakes);
         }
-        public IEnumerable<VehicleMakeViewModel> GetVehicleByMakeSearch(string sortOrder, string currentFilter, string searchByName, int? page)
+        public IEnumerable<VehicleMakeViewModel> GetVehicleByMakeSearch(string sortOrder, string currentFilter, string searchByName, int pageNumber,int pageSize)
         {
+            
             var VehicleMake = Mapper.Map<IEnumerable<VehicleMakeViewModel>>(_context.VehicleMakes);
+            int c = VehicleMake.Count();
+            
             if (searchByName == null)
             {
-                int currentpage = page ?? default(int);
-                switch (sortOrder)
+               
+               switch (sortOrder)
                 {
                     case "name_desc":
-                        if (currentpage > 1)
-                        {
-                            VehicleMake = VehicleMake.OrderByDescending(b => b.Name).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleMake = VehicleMake.OrderByDescending(b => b.Name).Take(6);
-                        }
+                            VehicleMake = VehicleMake.OrderByDescending(b => b.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
                     case "abrv_desc":
-                        if( currentpage >1)
-                        {
-                            VehicleMake = VehicleMake.OrderByDescending(b => b.Abrv).Skip((currentpage-2) *3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleMake = VehicleMake.OrderByDescending(b => b.Abrv).Take(6);
-
-                        }
+                            VehicleMake = VehicleMake.OrderByDescending(b => b.Abrv).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
                     default:
-                        if (currentpage > 1)
-                        {
-                            VehicleMake = VehicleMake.OrderBy(b => b.Name).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleMake = VehicleMake.OrderBy(b => b.Name).Take(4);
-
-                        }
+                        VehicleMake = VehicleMake.OrderBy(b => b.Name).Skip((pageNumber-1)*pageSize).Take(pageSize).ToList();
                         break;
                 }
                 return VehicleMake;
+
             }
             else {
                 VehicleMake = VehicleMake.Where(v => v.Name.Contains(searchByName));
-                int currentpage = page ?? default(int);
+                
                 switch (sortOrder)
                 {
                     case "name_desc":
-                        if (currentpage > 1)
-                        {
-                            VehicleMake = VehicleMake.OrderByDescending(b => b.Name).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleMake = VehicleMake.OrderByDescending(b => b.Name).Take(6);
-                        }
+                            VehicleMake = VehicleMake.OrderByDescending(b => b.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
                     case "abrv_desc":
-                        if (currentpage > 1)
-                        {
-                            VehicleMake = VehicleMake.OrderByDescending(b => b.Abrv).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleMake = VehicleMake.OrderByDescending(b => b.Abrv).Take(6);
-                        }
+                            VehicleMake = VehicleMake.OrderByDescending(b => b.Abrv).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
                     default:
-                        if (currentpage > 1)
-                        {
-                            VehicleMake = VehicleMake.OrderBy(b => b.Name).Skip((currentpage - 2) * 3).Take(10);
-                        }
-                        else
-                        {
-                            VehicleMake = VehicleMake.OrderBy(b => b.Name).Take(4);
-
-                        }
+                            VehicleMake = VehicleMake.OrderBy(b => b.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                         break;
                 }
                 return VehicleMake;

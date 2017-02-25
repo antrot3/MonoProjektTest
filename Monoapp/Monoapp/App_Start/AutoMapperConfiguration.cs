@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Monoapp.Data.Database.Models.Entities;
-using Monoapp.Data.ViewModels;
+using Monoapp.ViewModels;
 
-namespace Monoapp.App_Start
+namespace Monoapp
 {
     public static class AutoMapperConfiguration
     {

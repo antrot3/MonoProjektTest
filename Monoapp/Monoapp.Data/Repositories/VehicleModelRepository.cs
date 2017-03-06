@@ -11,6 +11,7 @@ namespace Monoapp.Data.Repositories
         VehicleModel GetVehicleModelById(int id);
         ICollection<VehicleModel> GetVehicleByModelSearch(string sortOrder, string currentFilter, string searchByName, int pageNumber, int pageSize);
         void AddNewVehicleModel(VehicleModel vehicleModelViewModel);
+        IEnumerable<VehicleModel> GetAllVehicleModels();
         void EditVehicleModel(VehicleModel vehicleModelViewModel);
         void DeleteVehicleModel(int id);
         int GetCountOfVehicleModels();
@@ -43,10 +44,9 @@ namespace Monoapp.Data.Repositories
 
         public ICollection<VehicleModel> GetVehicleByModelSearch(string sortOrder, string currentFilter, string searchByName, int pageNumber, int pageSize)
         {
-            var vehicleModels = GetAllVehicleModels();
-            if (searchByName == null)
-            {
-
+            var vehicleModels = _getAllVehicleModels();
+            if (searchByName != null)
+            { vehicleModels = vehicleModels.Where(v => v.VehicleMake.Name.Contains(searchByName)); }
                 switch (sortOrder)
                 {
                     case "Name_Desc":
@@ -62,38 +62,20 @@ namespace Monoapp.Data.Repositories
                     default:
                         vehicleModels = vehicleModels.OrderBy(v => v.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize);
                         break;
-
                 }
-                return vehicleModels.ToList();
-
-            }
-            vehicleModels = vehicleModels.Where(v => v.VehicleMake.Name.Contains(searchByName));
-            switch (sortOrder)
-            {
-                case "Name_Desc":
-                    vehicleModels = vehicleModels.OrderByDescending(b => b.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                    break;
-
-                case "Connection_Desc":
-                    vehicleModels = vehicleModels.OrderByDescending(b => b.VehicleMake.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                    break;
-                case "Abrv_Desc":
-                    vehicleModels = vehicleModels.OrderByDescending(b => b.Abrv).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                    break;
-                default:
-                    vehicleModels = vehicleModels.OrderBy(v => v.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                    break;
-
-            }
-            return vehicleModels.ToList();
+                return  vehicleModels.ToList();
         }
 
         public VehicleModel GetVehicleModelById(int id)
         {
             return _context.VehicleModels.Find(id);
         }
+        public IEnumerable<VehicleModel> GetAllVehicleModels()
+        {
+            return _context.VehicleModels;
+        }
 
         public int GetCountOfVehicleModels() => _context.VehicleModels.Count();
-        private IQueryable<VehicleModel> GetAllVehicleModels() => _context.VehicleModels.AsQueryable();
+        private IQueryable<VehicleModel> _getAllVehicleModels() => _context.VehicleModels.AsQueryable();
     }
 }

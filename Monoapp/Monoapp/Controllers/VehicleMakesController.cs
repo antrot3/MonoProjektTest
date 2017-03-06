@@ -5,6 +5,8 @@ using AutoMapper;
 using Monoapp.Data.Database.Models.Entities;
 using Monoapp.Data.Repositories;
 using Monoapp.ViewModels;
+using PagedList;
+using System.Linq;
 
 namespace Monoapp.Controllers
 {
@@ -15,7 +17,11 @@ namespace Monoapp.Controllers
         {
             _vehicleMakesRepository = new VehicleMakesRepository();
         }
-
+        public static class Constant
+        {
+            public static int PageSize = 3;
+           
+        }
         // GET: VehicleMakes
         public ActionResult Index(string sortOrder, string currentFilter, string searchByName, int? page)
         {
@@ -23,24 +29,17 @@ namespace Monoapp.Controllers
             ViewBag.search = searchByName;
             ViewBag.NamesortParm2 = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.abrv2 = string.IsNullOrEmpty(sortOrder) ? "abrv_desc" : "";
-            var pageSize = 3;
             var pageNumber = (page ?? 1);
             ViewBag.page = pageNumber;
-            var totalPageNumbers = _vehicleMakesRepository.GetCountOfVehicleMake() / pageSize+1;
-            
-            var vehicleMakes = 
-                Mapper.Map<ICollection<VehicleMakeViewModel>>(
-                    _vehicleMakesRepository.GetVehicleByMakeSearch(sortOrder,currentFilter, searchByName, pageNumber, pageSize)
+            var vehicleMake= Mapper.Map<IEnumerable<VehicleMakeViewModel>>(
+                    _vehicleMakesRepository.GetVehicleByMakeSearch(sortOrder, currentFilter, searchByName, pageNumber, Constant.PageSize)
                     );
+            var totalnumber = _vehicleMakesRepository.GetAllVehicleMakes().Count();
             if (searchByName != null)
-            {   int g = 0;
-                foreach(var i in vehicleMakes){ g++;}
-                ViewBag.totalPageNumbers = g / pageSize + 1;
-            }
-            else
             {
-                ViewBag.totalPageNumbers = totalPageNumbers;
+                totalnumber = _vehicleMakesRepository.GetAllVehicleMakes().Where(c => c.Name.Contains(searchByName)).Count();
             }
+            var vehicleMakes = new StaticPagedList<VehicleMakeViewModel>(vehicleMake, pageNumber, Constant.PageSize, totalnumber);
             return View(vehicleMakes);
         }
         

@@ -3,12 +3,13 @@ using System.Data.Entity;
 using Monoapp.Data.Database.Models;
 using Monoapp.Data.Database.Models.Entities;
 using System.Linq;
+using PagedList;
 
 namespace Monoapp.Data.Repositories
 {
     public interface IVehicleMakesRepository
     {
-        ICollection<VehicleMake> GetVehicleByMakeSearch(string sortOrder, string currentFilter, string searchByName, int pageNumber, int pageSize);
+        IEnumerable<VehicleMake> GetVehicleByMakeSearch(string sortOrder, string currentFilter, string searchByName, int pageNumber, int pageSize);
         IEnumerable<VehicleMake> GetAllVehicleMakes();
         VehicleMake GetVehicleMakeById(int id);
         void AddNewVehicleMake(VehicleMake vehicleMakeViewModel);
@@ -45,12 +46,13 @@ namespace Monoapp.Data.Repositories
         }
 
         
-        public ICollection<VehicleMake> GetVehicleByMakeSearch(string sortOrder, string currentFilter, string searchByName, int pageNumber,int pageSize)
+        public IEnumerable<VehicleMake> GetVehicleByMakeSearch(string sortOrder, string currentFilter, string searchByName, int pageNumber,int pageSize)
         {
             var vehicleMakes = _getAllVehicleMakes();
 
-            if (searchByName == null)
-            {
+            if (searchByName != null)
+            { vehicleMakes = vehicleMakes.Where(v => v.Name.Contains(searchByName)); }
+            
                switch (sortOrder)
                 {
                     case "name_desc":
@@ -63,24 +65,8 @@ namespace Monoapp.Data.Repositories
                         vehicleMakes = vehicleMakes.OrderBy(b => b.Name).Skip((pageNumber-1)*pageSize).Take(pageSize);
                         break;
                 }
-                return vehicleMakes.ToList();
-            }
-
-            vehicleMakes = vehicleMakes.Where(v => v.Name.Contains(searchByName));
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    vehicleMakes = vehicleMakes.OrderByDescending(b => b.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                    break;
-                case "abrv_desc":
-                    vehicleMakes = vehicleMakes.OrderByDescending(b => b.Abrv).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                    break;
-                default:
-                    vehicleMakes = vehicleMakes.OrderBy(b => b.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                    break;
-                    
-            }
-            return vehicleMakes.ToList();
+                 return vehicleMakes.ToList();
+          
         }
 
         public VehicleMake GetVehicleMakeById(int id)

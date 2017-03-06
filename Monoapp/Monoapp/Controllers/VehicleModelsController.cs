@@ -22,7 +22,11 @@ namespace Monoapp.Controllers
             _vehicleModelRepository = new VehicleModelRepository();
             _vehicleMakesRepository= new VehicleMakesRepository();
         }
+        public static class Constant
+        {
+            public static int PageSize = 3;
 
+        }
         // GET: VehicleModels
         public ActionResult Index(string sortOrder, string currentFilter, string searchByName, int? page)
         {
@@ -32,19 +36,18 @@ namespace Monoapp.Controllers
             ViewBag.ConectionsortParam = string.IsNullOrEmpty(sortOrder) ? "Connection_Desc" : "";
             ViewBag.Abrv = string.IsNullOrEmpty(sortOrder) ? "Abrv_Desc" : "";
             ViewBag.search = searchByName;
-            var pageSize = 3;
             var pageNumber = (page ?? 1);
             ViewBag.page = pageNumber;
-            var totalPageNumbers = _vehicleModelRepository.GetCountOfVehicleModels()/pageSize+1;
-            var vehicleModels = Mapper.Map<ICollection<VehicleModelViewModel>>(
-                                    _vehicleModelRepository.GetVehicleByModelSearch(sortOrder, currentFilter,searchByName, pageNumber, pageSize).ToList()
+            var vehiclemodel = 
+                Mapper.Map<ICollection<VehicleModelViewModel>>(
+                                    _vehicleModelRepository.GetVehicleByModelSearch(sortOrder, currentFilter, searchByName, pageNumber, Constant.PageSize).ToList()
                                 );
+            var totalnumber = _vehicleModelRepository.GetCountOfVehicleModels();
             if (searchByName != null)
-            {    int g = 0;
-                foreach (var i in vehicleModels) { g++; }
-                ViewBag.totalPageNumbers = g / pageSize + 1;
+            {
+                totalnumber = _vehicleModelRepository.GetAllVehicleModels().Where(c => c.Name.Contains(searchByName)).Count();
             }
-            else{ ViewBag.totalPageNumbers = totalPageNumbers; }
+            var vehicleModels = new StaticPagedList<VehicleModelViewModel>(vehiclemodel, pageNumber, Constant.PageSize, totalnumber);
             return View(vehicleModels);
 
         }

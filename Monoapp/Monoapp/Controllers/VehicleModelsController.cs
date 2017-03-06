@@ -40,7 +40,7 @@ namespace Monoapp.Controllers
             ViewBag.page = pageNumber;
             var vehiclemodel = 
                 Mapper.Map<ICollection<VehicleModelViewModel>>(
-                                    _vehicleModelRepository.GetVehicleByModelSearch(sortOrder, currentFilter, searchByName, pageNumber, Constant.PageSize).ToList()
+                                    _vehicleModelRepository.GetVehicleByModelSearch(sortOrder, currentFilter, searchByName, pageNumber, Constant.PageSize)
                                 );
             var totalnumber = _vehicleModelRepository.GetCountOfVehicleModels();
             if (searchByName != null)

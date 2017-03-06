@@ -20,7 +20,7 @@ namespace Monoapp.Controllers
         public static class Constant
         {
             public static int PageSize = 3;
-           
+
         }
         // GET: VehicleMakes
         public ActionResult Index(string sortOrder, string currentFilter, string searchByName, int? page)
